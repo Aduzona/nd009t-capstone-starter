@@ -12,6 +12,15 @@
 ### Overview
 **TODO**: Explain about the data you are using and where you got it from.
 
+#### Preprocessing in `create_data_loaders`
+
+The `create_data_loaders` function already addresses the variability in image dimensions using the following transformations:
+1. **Resize**: All images are resized to 256 pixels on the smaller side while preserving the aspect ratio.
+2. **Center Crop**: Images are cropped to a 224x224 square, which is the standard input size for ResNet50.
+3. **Normalization**: The pixel values are normalized to match the mean and standard deviation of the ImageNet dataset, which is necessary for pre-trained ResNet50.
+
+These steps ensure that the model receives uniform input images, regardless of their original dimensions, and aligns with ResNet50's input requirements. Therefore, the code is sufficient for handling the dimension variability seen in the dataset.
+
 ### Access
 **TODO**: Explain how you are accessing the data in AWS and how you uploaded it
 
