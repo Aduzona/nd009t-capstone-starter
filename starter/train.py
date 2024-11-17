@@ -65,14 +65,20 @@ def train(model, train_loader, val_loader, criterion, optimizer, hook, device, e
         val_accuracy = 100 * correct / total
         print(f"Validation Loss: {val_loss / len(val_loader.dataset)}, Accuracy: {val_accuracy}%")
 
-# Model initialization function for classification
-def net():
-    model = models.resnet50(pretrained=True)
-    for param in model.parameters():
+# Simple model definition
+def simple_model(): #net()
+    base_model = models.resnet50(pretrained=True)
+    for param in base_model.parameters():
         param.requires_grad = False
-    num_features = model.fc.in_features
-    model.fc = nn.Linear(num_features, 5)  # 5 classes (1-5 objects)
-    return model
+    num_features = base_model.fc.in_features
+    base_model.fc = nn.Sequential(
+        nn.Linear(num_features, 256),
+        nn.ReLU(),
+        nn.BatchNorm1d(256),
+        nn.Dropout(0.5),
+        nn.Linear(256, 5)  # 5 classes
+    )
+    return base_model
 
 # Data loader function
 def create_data_loaders(data_dir, batch_size):
@@ -94,7 +100,7 @@ def create_data_loaders(data_dir, batch_size):
 # Main function
 def main(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = net().to(device)
+    model = simple_model().to(device)
     
     # Use CrossEntropyLoss for classification
     loss_criterion = nn.CrossEntropyLoss()
@@ -114,7 +120,7 @@ def main(args):
     test(model, test_loader, loss_criterion, hook, device)
     
     # Save the trained model
-    torch.save(model.state_dict(), os.path.join(args.model_dir, 'model.pth'))
+    torch.save(model.state_dict(), os.path.join(args.model_dir, 'simple_model.pth'))
 
 # Argument parsing
 if __name__ == '__main__':

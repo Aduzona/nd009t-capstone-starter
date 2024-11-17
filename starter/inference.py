@@ -68,5 +68,29 @@ def predict_fn(input_data, model):
     except Exception as e:
         logger.error(f"Error in predict_fn: {str(e)}")
         raise RuntimeError("Failed to run prediction.")
-
 ''' 
+
+def predict_fn(input_data, model):
+    logger.info("Starting prediction.")
+    start_time = time.time()
+    
+    test_transform = transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+    
+    logger.info("transforming input")
+    input_data=test_transform(input_data)
+
+    # Inference
+    logger.info("Running inference...")
+    with torch.no_grad():
+        logger.info("Calling model")
+        prediction = model(input_data.unsqueeze(0))
+
+    logger.info(f"Inference completed in {time.time() - start_time:.2f} seconds.")
+    return prediction
+
+
