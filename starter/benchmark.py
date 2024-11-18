@@ -114,7 +114,7 @@ def main(args):
     test(model, test_loader, loss_criterion, hook, device)
     
     # Save the trained model
-    torch.save(model.state_dict(), os.path.join(args.model_dir, 'resnet50_model.pth'))
+    torch.save(model.state_dict(), os.path.join(args.model_dir, 'model.pth'))
 
 # Argument parsing
 if __name__ == '__main__':

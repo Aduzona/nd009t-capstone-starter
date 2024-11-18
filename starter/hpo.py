@@ -85,7 +85,7 @@ def train(model, train_loader, valid_loader, criterion, optimizer, device, epoch
         # Save the best model
         if val_loss < best_loss:
             best_loss = val_loss
-            torch.save(model.state_dict(), os.path.join(args.model_dir, 'best_model.pth'))
+            torch.save(model.state_dict(), os.path.join(args.model_dir, 'model.pth'))
             logger.info("Best model saved.")
 
 def net():
